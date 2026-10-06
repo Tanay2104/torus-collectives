@@ -1,0 +1,10 @@
+{
+  "scheduling-policy": "LIFO",
+  "active-chunks-per-dimension": 1,
+  "preferred-dataset-splits": 1,
+  "all-gather-implementation-custom": ["@OUTPUT_DIR@/forestcoll-torus-et/forestcoll-torus"],
+  "collective-optimization": "baseline",
+  "endpoint-delay": 0,
+  "intra-dimension-scheduling": "FIFO",
+  "inter-dimension-scheduling": "baseline"
+}

@@ -1,0 +1,4 @@
+topology: [Ring,Ring]
+npus_count: [4,4]
+bandwidth: [50,50]
+latency: [100,100]

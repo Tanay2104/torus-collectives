@@ -1,0 +1,15 @@
+# Dependency checkouts listed in dependencies.lock
+/ForestColl/
+/msccl-tools/
+/Simulation/astra-sim/
+/Simulation/collectiveapi/
+
+# Old standalone clone; the workflow uses ASTRA-Sim's pinned Chakra submodule
+/Simulation/chakra/
+
+# Local environment and generated run data
+/.venv/
+__pycache__/
+*.py[cod]
+/runs/
+/log/
