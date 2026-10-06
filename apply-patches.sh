@@ -22,8 +22,11 @@ case "${1:-}" in
   python314)
     apply_once patches/ns3-python314.patch "$ROOT/Simulation/astra-sim/extern/network_backend/ns-3"
     ;;
+  astra-reentrancy)
+    apply_once patches/astra-custom-reentrancy.patch "$ROOT/Simulation/astra-sim"
+    ;;
   *)
-    echo "Usage: $0 {rcs|python314}" >&2
+    echo "Usage: $0 {rcs|python314|astra-reentrancy}" >&2
     exit 2
     ;;
 esac

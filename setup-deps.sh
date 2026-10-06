@@ -89,6 +89,6 @@ while IFS='|' read -r name relpath url revision role; do
   fi
 done < "$ROOT/dependencies.lock"
 
-# Apply the project-owned compatibility patch needed by the pinned converter.
-# Keep this in setup: launching an experiment should not mutate dependencies.
+# Apply project-owned compatibility patches during setup, not during a run.
 "$ROOT/apply-patches.sh" rcs
+"$ROOT/apply-patches.sh" astra-reentrancy

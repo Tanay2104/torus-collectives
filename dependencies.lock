@@ -2,6 +2,6 @@
 # A revision with A+B means merge public commit A with ASTRA-Sim's comm_size commit B; setup-deps.sh recreates it.
 ForestColl | ForestColl | https://github.com/liangyuRain/ForestColl.git | d7bd6a94e443e218aa26f319cbe22c70fe16921f | generalized tree solver and hand-written XML lowering
 MSCCL Tools | msccl-tools | https://github.com/microsoft/msccl-tools.git | 030a750fc56e03fb863ffe48268672d84d4cdc7b | MSCCL DSL compiler
-ASTRA-Sim | Simulation/astra-sim | https://github.com/astra-sim/astra-sim.git | 518bd513ae110428cd62eb60efc0f3993fd53c70+831eca84b41b1a3d9c1c527d1153c254026ab029 | merge upstream master with comm_size for symbolic collective sizes
+ASTRA-Sim | Simulation/astra-sim | https://github.com/astra-sim/astra-sim.git | 4ce9ecfe746a3ee5fe47559a11d91644d641fa7f+831eca84b41b1a3d9c1c527d1153c254026ab029 | include upstream NS-3 concurrent-receive fix and comm_size support
 Collective API | Simulation/collectiveapi | https://github.com/astra-sim/collectiveapi.git | e1c2ef6b435e01cbf3675af5e38225c5113ba56a | MSCCL XML to Chakra converter
 # ASTRA-Sim pins Chakra and ns-3 as submodules; Collective API pins msccl-tools at 8d735800a87bf4426816e2c10a9834a42ab64fe6.

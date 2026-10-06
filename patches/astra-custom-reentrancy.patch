@@ -1,0 +1,65 @@
+diff --git a/astra-sim/system/astraccl/custom_collectives/CustomAlgorithm.cc b/astra-sim/system/astraccl/custom_collectives/CustomAlgorithm.cc
+index 9fae539..35aa03f 100644
+--- a/astra-sim/system/astraccl/custom_collectives/CustomAlgorithm.cc
++++ b/astra-sim/system/astraccl/custom_collectives/CustomAlgorithm.cc
+@@ -208,15 +208,25 @@ void CustomAlgorithm::issue(shared_ptr<Chakra::FeederV3::ETFeederNode> node) {
+ }
+ 
+ void CustomAlgorithm::issue_dep_free_nodes() {
++    if (issuing_nodes) {
++        return;
++    }
++    issuing_nodes = true;
+     auto& dependancy_resolver = et_feeder->getDependancyResolver();
+-    const auto free_nodes = dependancy_resolver.get_dependancy_free_nodes();
+-    for (const auto& node_id : free_nodes) {
++    while (true) {
++        const auto free_nodes = dependancy_resolver.get_dependancy_free_nodes();
++        if (free_nodes.empty()) {
++            break;
++        }
++        const auto node_id = *free_nodes.begin();
+         shared_ptr<Chakra::FeederV3::ETFeederNode> node =
+             et_feeder->lookupNode(node_id);
+-        if (node != nullptr) {
+-            issue(node);
++        if (node == nullptr) {
++            throw runtime_error("Unknown node returned by dependency resolver");
+         }
++        issue(node);
+     }
++    issuing_nodes = false;
+ }
+ 
+ // This is called when a SEND/RECV/COMP operator has completed.
+@@ -238,7 +248,7 @@ void CustomAlgorithm::call(EventType event, CallData* data) {
+     delete wlhd;
+ 
+     if (dep_resolver.get_ongoing_nodes().empty() &&
+-        dep_resolver.get_dependancy_free_nodes().empty()) {
++        dep_resolver.get_dependancy_free_nodes().empty() && !issuing_nodes) {
+         // There are no more nodes to execute, and no node is executing, so we
+         // finish the collective algorithm.
+         exit();
+@@ -249,4 +259,9 @@ void CustomAlgorithm::run(EventType event, CallData* data) {
+     // Start executing the collective algorithm implementation by issuing the
+     // root nodes.
+     issue_dep_free_nodes();
++    auto& dep_resolver = et_feeder->getDependancyResolver();
++    if (dep_resolver.get_ongoing_nodes().empty() &&
++        dep_resolver.get_dependancy_free_nodes().empty() && !issuing_nodes) {
++        exit();
++    }
+ }
+diff --git a/astra-sim/system/astraccl/custom_collectives/CustomAlgorithm.hh b/astra-sim/system/astraccl/custom_collectives/CustomAlgorithm.hh
+index e239f5d..45ded1b 100644
+--- a/astra-sim/system/astraccl/custom_collectives/CustomAlgorithm.hh
++++ b/astra-sim/system/astraccl/custom_collectives/CustomAlgorithm.hh
+@@ -73,6 +73,7 @@ class CustomAlgorithm : public Algorithm {
+     // to traverse the whole workload Chakra ET.
+     Chakra::ETFeeder* et_feeder;
+     CommunicatorGroup* comm_group;
++    bool issuing_nodes = false;
+     // Size of the collective as defined in the workload's COLL_COMM_NODE Chakra node.
+     uint64_t data_size;
+     Sys* sys;
